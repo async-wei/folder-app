@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Stash Anything</string>
+    <string name="app_description">Your digital vault for everything online</string>
+
+    <!-- Home Screen -->
+    <string name="home_title">Stash Anything</string>
+    <string name="no_stashes">No stashes yet. Create one to get started!</string>
+    <string name="search_stashes">Search stashes...</string>
+
+    <!-- Stash Detail -->
+    <string name="items_count">%d items</string>
+    <string name="no_items">No items saved yet</string>
+
+    <!-- Actions -->
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="search">Search</string>
+    <string name="back">Back</string>
+
+    <!-- Dialogs -->
+    <string name="new_stash">New Stash</string>
+    <string name="stash_name">Stash Name</string>
+    <string name="stash_description">Description</string>
+    <string name="save_item">Save Item</string>
+    <string name="item_title">Title</string>
+    <string name="item_url">URL</string>
+    <string name="item_tags">Tags (comma separated)</string>
+</resources>
