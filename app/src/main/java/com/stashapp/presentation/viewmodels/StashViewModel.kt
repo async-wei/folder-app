@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -46,6 +47,15 @@ class StashViewModel(
 
     private val _pendingItemData = MutableStateFlow<PendingItemData?>(null)
     val pendingItemData: StateFlow<PendingItemData?> = _pendingItemData.asStateFlow()
+
+    val itemCounts: StateFlow<Map<Int, Int>> = combine(
+        stashes,
+        repository.getAllItems()
+    ) { stashes, allItems ->
+        stashes.associate { stash ->
+            stash.id to allItems.count { it.stashId == stash.id }
+        }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyMap())
 
     fun selectStash(stashId: Int) {
         _selectedStashId.value = stashId

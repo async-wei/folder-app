@@ -44,6 +44,8 @@ class StashRepository(
     }
 
     // Item operations
+    fun getAllItems(): Flow<List<SavedItemEntity>> = itemDao.getAllItems()
+
     fun getItemsByStash(stashId: Int): Flow<List<SavedItemEntity>> = itemDao.getItemsByStash(stashId)
 
     fun searchItems(stashId: Int, query: String): Flow<List<SavedItemEntity>> =

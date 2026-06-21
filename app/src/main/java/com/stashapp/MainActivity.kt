@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.stashapp.data.database.StashDatabase
 import com.stashapp.data.repository.StashRepository
 import com.stashapp.presentation.screens.HomeScreen
+import com.stashapp.presentation.screens.SearchScreen
 import com.stashapp.presentation.screens.StashDetailScreen
 import com.stashapp.presentation.viewmodels.StashViewModel
 import com.stashapp.presentation.viewmodels.StashViewModelFactory
@@ -50,6 +51,18 @@ class MainActivity : ComponentActivity() {
                                 viewModel = viewModel,
                                 onStashClick = { stashId ->
                                     navController.navigate("stash/$stashId")
+                                },
+                                onSearchClick = {
+                                    navController.navigate("search")
+                                }
+                            )
+                        }
+                        composable("search") {
+                            SearchScreen(
+                                viewModel = viewModel,
+                                onBackClick = { navController.popBackStack() },
+                                onItemClick = { itemId ->
+                                    // TODO: Navigate to item detail
                                 }
                             )
                         }

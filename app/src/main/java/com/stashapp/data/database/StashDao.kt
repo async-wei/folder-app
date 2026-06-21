@@ -42,6 +42,9 @@ interface SavedItemDao {
     @Delete
     suspend fun deleteItem(item: SavedItemEntity)
 
+    @Query("SELECT * FROM saved_items ORDER BY savedAt DESC")
+    fun getAllItems(): Flow<List<SavedItemEntity>>
+
     @Query("SELECT * FROM saved_items WHERE stashId = :stashId ORDER BY savedAt DESC")
     fun getItemsByStash(stashId: Int): Flow<List<SavedItemEntity>>
 
