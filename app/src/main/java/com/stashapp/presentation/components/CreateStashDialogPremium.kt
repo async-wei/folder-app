@@ -174,7 +174,7 @@ fun CreateStashDialogPremium(
                         modifier = Modifier
                             .weight(1f)
                             .height(44.dp)
-                            .background(Color.Black, shape = RoundedCornerShape(10.dp))
+                            .background(Color(0xFFC1703F), shape = RoundedCornerShape(10.dp))
                             .clickable(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }

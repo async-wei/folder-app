@@ -51,12 +51,12 @@ fun StashBottomNavigationBar(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
-            .padding(horizontal = 8.dp, vertical = 8.dp)
+            .padding(horizontal = 8.dp, vertical = 12.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(64.dp),
+                .height(56.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -82,7 +82,7 @@ fun BottomNavItemCustom(
         modifier = modifier
             .size(width = 64.dp, height = 48.dp)
             .background(
-                color = if (isSelected) Color(0xFFEEEEEE) else Color.Transparent,
+                color = if (isSelected) Color(0xFFE8D4C8) else Color.Transparent,  // Light rust highlight
                 shape = RoundedCornerShape(12.dp)
             )
             .clickable(
@@ -102,13 +102,13 @@ fun BottomNavItemCustom(
                 imageVector = item.icon,
                 contentDescription = item.label,
                 modifier = Modifier.size(24.dp),
-                tint = if (isSelected) Color.Black else Color(0xFF999999)
+                tint = if (isSelected) Color(0xFFC1703F) else Color(0xFF999999)
             )
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 text = item.label,
                 fontSize = 10.sp,
-                color = if (isSelected) Color.Black else Color(0xFF999999)
+                color = if (isSelected) Color(0xFFC1703F) else Color(0xFF999999)
             )
         }
     }

@@ -1,6 +1,7 @@
 package com.stashapp.presentation.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -18,8 +19,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -47,6 +50,7 @@ fun HomePremium(
 ) {
     val stashes by viewModel.stashes.collectAsState(initial = emptyList())
     var showCreateDialog by remember { mutableStateOf(false) }
+    var stashToDelete by remember { mutableStateOf<String?>(null) }
 
     Box(
         modifier = Modifier
@@ -56,10 +60,10 @@ fun HomePremium(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 20.dp, end = 20.dp, top = 16.dp, bottom = 0.dp)
+                .padding(start = 20.dp, end = 20.dp, top = 0.dp, bottom = 90.dp)
         ) {
-            // Top padding for notch - add extra space
-            Spacer(modifier = Modifier.height(20.dp))
+            // Top padding for notch + extra spacing - ADJUSTED
+            Spacer(modifier = Modifier.height(36.dp))
 
             // Header with greeting and notification icon
             Row(
@@ -74,21 +78,23 @@ fun HomePremium(
                     color = Color.Black
                 )
 
-                // Notification icon with circle background
+                // Notification icon with circle background - ADDED CIRCLE
                 Box(
                     modifier = Modifier
-                        .size(48.dp)
-                        .background(Color(0xFFF0F0F0), shape = CircleShape),
+                        .size(56.dp)
+                        .background(Color(0xFFF0F0F0), shape = CircleShape)
+                        .border(2.dp, Color(0xFFC1703F), CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     BellIcon(
                         modifier = Modifier.size(24.dp),
-                        tint = Color.Black
+                        tint = Color(0xFFC1703F)
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            // Increased spacing between Hello User and search - ADJUSTED
+            Spacer(modifier = Modifier.height(28.dp))
 
             // Search bar
             Box(
@@ -124,7 +130,8 @@ fun HomePremium(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            // Increased spacing after search - ADJUSTED
+            Spacer(modifier = Modifier.height(28.dp))
 
             // Your Stashes header
             Row(
@@ -149,28 +156,45 @@ fun HomePremium(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Stashes grid
+            // Stashes grid - 3 columns - UPDATED TO 3 COLUMNS
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                for (i in stashes.indices step 2) {
+                for (i in stashes.indices step 3) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
+                        // Column 1
                         StashCardPremium(
                             stash = stashes[i],
                             modifier = Modifier.weight(1f),
-                            onClick = { onStashClick(stashes[i].id.toString()) }
+                            onClick = { onStashClick(stashes[i].id.toString()) },
+                            onDelete = { stashToDelete = stashes[i].id.toString() }
                         )
+
+                        // Column 2
                         if (i + 1 < stashes.size) {
                             StashCardPremium(
                                 stash = stashes[i + 1],
                                 modifier = Modifier.weight(1f),
-                                onClick = { onStashClick(stashes[i + 1].id.toString()) }
+                                onClick = { onStashClick(stashes[i + 1].id.toString()) },
+                                onDelete = { stashToDelete = stashes[i + 1].id.toString() }
+                            )
+                        } else {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
+
+                        // Column 3
+                        if (i + 2 < stashes.size) {
+                            StashCardPremium(
+                                stash = stashes[i + 2],
+                                modifier = Modifier.weight(1f),
+                                onClick = { onStashClick(stashes[i + 2].id.toString()) },
+                                onDelete = { stashToDelete = stashes[i + 2].id.toString() }
                             )
                         } else {
                             Spacer(modifier = Modifier.weight(1f))
@@ -178,20 +202,18 @@ fun HomePremium(
                     }
                 }
             }
-
-            Spacer(modifier = Modifier.height(80.dp))
         }
 
-        // FAB positioned at bottom right
+        // FAB positioned at bottom right - MOVED UP SLIGHTLY
         FloatingActionButton(
             onClick = { showCreateDialog = true },
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(end = 20.dp, bottom = 80.dp),
-            containerColor = Color.Black,
+                .padding(end = 20.dp, bottom = 100.dp),
+            containerColor = Color(0xFFC1703F),
             contentColor = Color.White
         ) {
-            androidx.compose.material3.Icon(
+            Icon(
                 imageVector = Icons.Default.Add,
                 contentDescription = "Create Stash",
                 modifier = Modifier.size(24.dp)
@@ -208,18 +230,25 @@ fun HomePremium(
             }
         )
     }
+
+    // Handle stash deletion
+    if (stashToDelete != null) {
+        // TODO: Implement actual delete
+        stashToDelete = null
+    }
 }
 
 @Composable
 fun StashCardPremium(
     stash: StashEntity,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onDelete: () -> Unit = {}
 ) {
     val colorLong = try {
         stash.color.replace("#", "").toLong(16) or 0xFF000000L
     } catch (e: Exception) {
-        0xFFFF6B6BL
+        0xFFC1703FL  // Red Roo Rust fallback
     }
 
     Box(
@@ -238,19 +267,45 @@ fun StashCardPremium(
             .padding(16.dp),
         contentAlignment = Alignment.BottomStart
     ) {
-        Column(verticalArrangement = Arrangement.Bottom) {
-            Text(
-                text = stash.name,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = Color.White
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "${stash.itemCount} items",
-                fontSize = 12.sp,
-                color = Color.White.copy(alpha = 0.8f)
-            )
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Top right: Delete button (temporary)
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.TopEnd
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete Stash",
+                    modifier = Modifier
+                        .size(18.dp)
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() }
+                        ) {
+                            onDelete()
+                        },
+                    tint = Color.White.copy(alpha = 0.7f)
+                )
+            }
+
+            // Bottom: Name and item count
+            Column(verticalArrangement = Arrangement.Bottom) {
+                Text(
+                    text = stash.name,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.White
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "${stash.itemCount} items",
+                    fontSize = 12.sp,
+                    color = Color.White.copy(alpha = 0.8f)
+                )
+            }
         }
     }
 }
