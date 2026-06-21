@@ -1,176 +1,65 @@
-# Stash Anything - Android App Development Guide
+# CLAUDE.md
 
-## Project Overview
-We're building an Android version of the Stash Anything app - a digital vault for saving and organizing content (links, screenshots, articles, recipes, videos, etc.) with one-tap share integration.
+Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
 
-**Reference**: Original iOS app at https://apps.apple.com/us/app/stash-anything-digital-vault/id6758998468
+**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 
-## Key Principles
+## 1. Think Before Coding
 
-### Design Approach
-- **Inspired by, not copied from**: We use Stash Anything's core concepts (stashes, one-tap save, organization) but build our own UI/UX
-- **Reference images**: In `imagereference/` folder (9 app screenshots) - study for flow/features, not UI design
-- **Own design identity**: Create distinctive Android UI using Material 3
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
 
-### Development Philosophy
-- **Fundamentals first**: Focus on core functionality before advanced features
-- **Kotlin + Compose**: Modern Android stack, not legacy Views
-- **MVVM architecture**: Clean separation of concerns for testing
-- **Local-first**: Data stored locally first, sync comes later
-- **Incremental features**: Build and test features one at a time
+Before implementing:
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
 
-## Current State
+## 2. Simplicity First
 
-### Phase 1: ✅ COMPLETE - Android Project Setup
-- Build system configured (Gradle, dependencies)
-- Database layer created (Room entities, DAOs)
-- Repository pattern implemented
-- ViewModel with state management
-- Basic Compose screens (HomeScreen, StashDetailScreen)
-- Material 3 theme setup
-- Dependency injection (Hilt) configured
-- Manifest with share intent filters ready
+**Minimum code that solves the problem. Nothing speculative.**
 
-### Key Files
-- `app/build.gradle.kts` - Dependencies and build config
-- `app/src/main/java/com/stashapp/` - Source code
-- `app/src/main/AndroidManifest.xml` - Permissions, intent filters
-- `PROJECT_STRUCTURE.md` - Detailed architecture docs
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
 
-## Core Features to Build
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
 
-### MVP (Must Have)
-1. ✅ Database: Save stashes and items
-2. ✅ Create stash (category)
-3. ✅ Save items to stash
-4. ✅ View stashes and items
-5. ✅ Share sheet integration (backend ready)
-6. ✅ Search items
-7. **Next**: Edit/delete stashes
-8. **Next**: Edit/delete items
-9. **Next**: Tags and favorites UI
-10. **Next**: Item detail screen
+## 3. Surgical Changes
 
-### Phase 2 (Should Have)
-- Cloud sync backend
-- User authentication
-- Collaborative stashes
-- Export to Markdown/PDF
-- Offline mode with sync conflict resolution
-- Advanced search/filtering
-- Widget support
+**Touch only what you must. Clean up only your own mess.**
 
-### Phase 3+ (Nice to Have)
-- Social features (comments, sharing)
-- AI-powered tagging
-- Full-text search
-- Mobile web sync
-- Siri Shortcuts integration
-- Dark mode refinements
+When editing existing code:
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
 
-## Architecture
+When your changes create orphans:
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
 
+The test: Every changed line should trace directly to the user's request.
+
+## 4. Goal-Driven Execution
+
+**Define success criteria. Loop until verified.**
+
+Transform tasks into verifiable goals:
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
 ```
-MainActivity.kt (Share receiver)
-    ↓
-StashViewModel (State & logic)
-    ↓
-StashRepository (Data layer)
-    ↓
-StashDatabase (Room)
-    ├─ StashEntity (stashes/folders)
-    └─ SavedItemEntity (saved content)
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
 ```
 
-**Key Pattern**: All data flows through ViewModel → StateFlow → UI recomposition
-
-## Important Notes
-
-### Kotlin/Compose Best Practices
-- Use `StateFlow` for state management (not `MutableState` in ViewModel)
-- Compose screens are reusable, testable functions
-- Keep ViewModels lean - business logic in Repository
-- Use `collectAsState()` in Compose to subscribe to flows
-
-### Database Patterns
-- Entities = data classes with @Entity annotation
-- DAOs = query interfaces with Flow return types
-- Repository = single source of truth for data access
-- Never expose DAO directly to ViewModel
-
-### Testing Strategy
-- Unit tests for ViewModels
-- Database tests for DAOs
-- UI tests for Compose screens (future)
-
-## Common Tasks
-
-### Adding a New Screen
-1. Create screen file in `presentation/screens/`
-2. Add navigation route in MainActivity
-3. Create/use ViewModel
-4. Use `collectAsState()` for reactive data
-
-### Adding a New Database Entity
-1. Create entity in `data/database/StashEntity.kt`
-2. Add DAO methods in `data/database/StashDao.kt`
-3. Add migration if schema changes
-4. Update Repository with new methods
-
-### Sharing & Intents
-- `MainActivity.handleIncomingIntent()` processes shares
-- `ViewModel.handleSharedText()` for text/links
-- `ViewModel.handleSharedMedia()` for images/videos
-- Currently saves to pending state, needs UI dialog to choose stash
-
-## Dev Workflow
-
-### To Test Share Integration
-1. Open any app (Chrome, Reddit, TikTok, etc.)
-2. Long-press content
-3. Tap "Share" → "Stash Anything"
-4. App opens with share preview
-
-### To Debug Database
-- Use Android Studio's Database Inspector
-- Or query SQLite directly: `adb shell sqlite3 /data/data/com.stashapp/databases/stash_database`
-
-### To Check Logs
-```bash
-adb logcat | grep com.stashapp
-```
-
-## File Naming Conventions
-- `Screens`: `*Screen.kt` (e.g., HomeScreen.kt)
-- `ViewModels`: `*ViewModel.kt` (e.g., StashViewModel.kt)
-- `Entities`: `*Entity.kt` (e.g., StashEntity.kt)
-- `DAOs`: `*Dao.kt` (e.g., StashDao.kt)
-- `Repositories`: `*Repository.kt` (e.g., StashRepository.kt)
-- `Composables`: PascalCase (e.g., `StashCard`, `SavedItemCard`)
-
-## Dependency Versions (Lock to These)
-- Kotlin: 1.9.20
-- Gradle: 8.2.0
-- Compose: 1.6.1
-- Room: 2.6.1
-- Hilt: 2.49
-- Min SDK: 26, Target: 34
-
-## Known Limitations / TODOs
-- Share sheet shows dialog but needs stash selection UI
-- No item detail screen yet
-- No offline sync conflict resolution
-- Images stored locally only (no cloud backup)
-- No user authentication system
-- Search UI not integrated into HomeScreen
-
-## Quick Reference Links
-- Material 3 Components: https://m3.material.io/
-- Compose Modifier Documentation: https://developer.android.com/reference/kotlin/androidx/compose/ui/Modifier
-- Room Database Guide: https://developer.android.com/jetpack/androidx/releases/room
-- Hilt Dependency Injection: https://dagger.dev/hilt/
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
 ---
 
-**Last Updated**: 2026-06-19
-**Phase**: Setup Complete, Ready for Feature Development
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
