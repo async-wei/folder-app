@@ -6,17 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.stashapp.data.database.SavedItemEntity
 import com.stashapp.data.database.StashEntity
 import com.stashapp.data.repository.StashRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class StashViewModel @Inject constructor(
+class StashViewModel(
     private val repository: StashRepository
 ) : ViewModel() {
 
@@ -26,7 +23,7 @@ class StashViewModel @Inject constructor(
     private val _selectedStashId = MutableStateFlow<Int?>(null)
     val selectedStashId: StateFlow<Int?> = _selectedStashId.asStateFlow()
 
-    val selectedStash: StateFlow<StashEntity?> = repository.getStashByIdFlow(
+    val selectedStash: StateFlow<StashEntity?> = repository.getStashById(
         selectedStashId.value ?: -1
     ).stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 

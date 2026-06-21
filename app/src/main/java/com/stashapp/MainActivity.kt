@@ -10,17 +10,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.stashapp.data.database.StashDatabase
+import com.stashapp.data.repository.StashRepository
 import com.stashapp.presentation.screens.HomeScreen
 import com.stashapp.presentation.screens.StashDetailScreen
 import com.stashapp.presentation.viewmodels.StashViewModel
+import com.stashapp.presentation.viewmodels.StashViewModelFactory
 import com.stashapp.ui.theme.StashAppTheme
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +32,10 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    val viewModel: StashViewModel = hiltViewModel()
+                    val database = StashDatabase.getInstance(this@MainActivity)
+                    val repository = StashRepository(database.stashDao(), database.savedItemDao())
+                    val factory = StashViewModelFactory(repository)
+                    val viewModel: StashViewModel = viewModel(factory = factory)
 
                     LaunchedEffect(Unit) {
                         handleIncomingIntent(intent, viewModel)
@@ -68,8 +72,6 @@ class MainActivity : ComponentActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         this.intent = intent
-        val viewModel: StashViewModel = hiltViewModel()
-        handleIncomingIntent(intent, viewModel)
     }
 
     private fun handleIncomingIntent(intent: Intent, viewModel: StashViewModel) {

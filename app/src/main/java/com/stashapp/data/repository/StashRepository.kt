@@ -5,9 +5,8 @@ import com.stashapp.data.database.SavedItemEntity
 import com.stashapp.data.database.StashDao
 import com.stashapp.data.database.StashEntity
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
-class StashRepository @Inject constructor(
+class StashRepository(
     private val stashDao: StashDao,
     private val itemDao: SavedItemDao
 ) {
