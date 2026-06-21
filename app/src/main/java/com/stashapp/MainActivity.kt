@@ -6,9 +6,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -16,9 +20,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.stashapp.data.database.StashDatabase
 import com.stashapp.data.repository.StashRepository
-import com.stashapp.presentation.screens.HomeScreen
+import com.stashapp.presentation.components.StashBottomNavigationBar
+import com.stashapp.presentation.screens.HomeScreenV2
 import com.stashapp.presentation.screens.SearchScreen
 import com.stashapp.presentation.screens.StashDetailScreen
+import com.stashapp.presentation.screens.UnstashedScreen
+import com.stashapp.presentation.screens.SettingsScreen
 import com.stashapp.presentation.viewmodels.StashViewModel
 import com.stashapp.presentation.viewmodels.StashViewModelFactory
 import com.stashapp.ui.theme.StashAppTheme
@@ -38,42 +45,80 @@ class MainActivity : ComponentActivity() {
                     val factory = StashViewModelFactory(repository)
                     val viewModel: StashViewModel = viewModel(factory = factory)
 
+                    val currentRoute = remember { mutableStateOf("home") }
+
                     LaunchedEffect(Unit) {
                         handleIncomingIntent(intent, viewModel)
                     }
 
-                    NavHost(
-                        navController = navController,
-                        startDestination = "home"
-                    ) {
-                        composable("home") {
-                            HomeScreen(
-                                viewModel = viewModel,
-                                onStashClick = { stashId ->
-                                    navController.navigate("stash/$stashId")
-                                },
-                                onSearchClick = {
-                                    navController.navigate("search")
+                    Scaffold(
+                        bottomBar = {
+                            StashBottomNavigationBar(
+                                currentRoute = currentRoute.value,
+                                onNavigate = { route ->
+                                    currentRoute.value = route
+                                    navController.navigate(route) {
+                                        popUpTo("home") { saveState = true }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
                                 }
                             )
                         }
-                        composable("search") {
-                            SearchScreen(
-                                viewModel = viewModel,
-                                onBackClick = { navController.popBackStack() },
-                                onItemClick = { itemId ->
-                                    // TODO: Navigate to item detail
-                                }
-                            )
-                        }
-                        composable("stash/{stashId}") { backStackEntry ->
-                            val stashId = backStackEntry.arguments?.getString("stashId")
-                            if (stashId != null) {
-                                StashDetailScreen(
-                                    stashId = stashId,
+                    ) { paddingValues ->
+                        NavHost(
+                            navController = navController,
+                            startDestination = "home",
+                            modifier = Modifier.padding(bottom = paddingValues.calculateBottomPadding())
+                        ) {
+                            composable("home") {
+                                currentRoute.value = "home"
+                                HomeScreenV2(
                                     viewModel = viewModel,
-                                    onBackClick = { navController.popBackStack() }
+                                    onStashClick = { stashId ->
+                                        navController.navigate("stash/$stashId")
+                                    },
+                                    onSearchClick = {
+                                        currentRoute.value = "search"
+                                        navController.navigate("search")
+                                    }
                                 )
+                            }
+                            composable("unstashed") {
+                                currentRoute.value = "unstashed"
+                                UnstashedScreen(
+                                    viewModel = viewModel
+                                )
+                            }
+                            composable("search") {
+                                currentRoute.value = "search"
+                                SearchScreen(
+                                    viewModel = viewModel,
+                                    onBackClick = {
+                                        currentRoute.value = "home"
+                                        navController.popBackStack()
+                                    },
+                                    onItemClick = { itemId ->
+                                        // TODO: Navigate to item detail
+                                    }
+                                )
+                            }
+                            composable("settings") {
+                                currentRoute.value = "settings"
+                                SettingsScreen()
+                            }
+                            composable("stash/{stashId}") { backStackEntry ->
+                                val stashId = backStackEntry.arguments?.getString("stashId")
+                                if (stashId != null) {
+                                    StashDetailScreen(
+                                        stashId = stashId,
+                                        viewModel = viewModel,
+                                        onBackClick = {
+                                            currentRoute.value = "home"
+                                            navController.popBackStack()
+                                        }
+                                    )
+                                }
                             }
                         }
                     }
