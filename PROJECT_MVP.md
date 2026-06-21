@@ -1,362 +1,492 @@
-# Stash Anything - MVP Context & Architecture
+# Stash Anything - Vibrant Premium Mobile App
 
-## Project Overview
+## Executive Summary
 
-**Stash Anything** is a premium mobile app for saving and organizing content from anywhere on your device. Think of it as a personal content library where users create "stashes" (collections) and save items (links, images, text) into them.
+**Stash Anything** is a vibrant, premium content-saving mobile app for iOS-like Android experience. Users save content from anywhere into themed collections ("stashes"). The design is playful, colorful, and premium—inspired by modern design systems like Dribbble's top products. It feels custom, joyful, and intentional. Not minimalist. Not Material Design. Premium and vibrant.
 
-**Target**: Premium iOS-like Android experience. Not a default Material Design app. Clean, minimal, custom feel.
+**Design Inspiration**: Playful-colorful aesthetic like Nestie, Bezel, or Alto. Warm, inviting, premium-feeling.
 
 ---
 
-## Core Problem We're Solving
+## Visual Design System
 
-Users want to:
-1. **Save content quickly** from any app (share intent)
-2. **Organize by topic** (stashes = collections)
-3. **Find things later** (search)
-4. **Revisit favorites** (unstashed/recent)
+### Color Palette
 
-Existing solutions (Pinterest, Pocket, Notion) are either too heavy, too specific, or require manual formatting. We're building the lightweight, flexible version.
+**Primary Brand Color (Hero/CTA)**
+- **Red Roo Rust** #C1703F - Main brand color, used for CTAs, highlights, key UI elements
+  - Warm, earthy, premium feeling
+  - Used for: FAB, buttons, active states, key highlights
+  - Conveys: Warmth, adventure, premium quality
+
+**Secondary/Supporting Colors**
+- **Outback Terracotta** #D85C36 - Red earth tone, alt CTA/strong accent
+- **Eucalyptus** #2F6B5E - Deep woodland green, secondary brand color
+- **Acacia Gold** #E8A33D - Wattle-flower gold, accent/highlight for badges, highlights
+- **Sage Mist** #9BAA8C - Muted plains green, secondary surfaces, card backgrounds
+- **White** #FFFFFF - Primary background, card backgrounds
+- **Black** #000000 - Text, dark elements
+
+### Typography
+
+- **Font Family**: San Francisco (Apple's native font)
+- **Style**: Clean, modern, friendly (not playful-rounded, but warm and approachable)
+- **Sizes**:
+  - **Headers** (28-32sp, SemiBold): Section titles, screen titles
+  - **Subheaders** (20-22sp, SemiBold): Feature names, category labels
+  - **Body** (16sp, Regular): Primary content text
+  - **Secondary** (14sp, Regular): Secondary info, labels
+  - **Labels** (12sp, SemiBold): Tags, badges, metadata
+  - **Captions** (11sp, Regular): Descriptions, helper text
+
+### Spacing & Sizing
+
+- **Padding Standard**: 16-24dp (generous, not cramped)
+- **Border Radius**: 16-20dp (rounded, premium feel)
+- **Icon Size**: 24-28dp (clear, readable)
+- **Card Height**: Variable (160-180dp for stash cards)
+- **Gap Between Elements**: 12-16dp (consistent breathing room)
+- **Safe Padding (edges)**: 20dp left/right
+- **Top Safe Area**: 40dp (notch + breathing room)
+- **Bottom Safe Area**: 100dp (above bottom nav)
+
+### Visual Style
+
+- **Background**: Warm white or very light cream undertones
+- **Cards**: White with subtle shadows (elevation 2-4dp)
+- **Shadows**: Soft, subtle (not bold)
+- **Corners**: Rounded 16-20dp (friendly, premium)
+- **Icons**: Outlined or filled, 24-28dp, vibrant rust/green tones
+- **Illustrations**: Optional, friendly, warm palette
+- **Mood**: Playful but sophisticated. Premium but approachable. Vibrant but cohesive.
+
+---
+
+## Core Features & Screens
+
+### 1. Home Screen (Primary)
+
+**Purpose**: Browse all stashes, quick access to recent items, create new stash.
+
+**Layout**:
+```
+[Header Section]
+├─ "Hello, User 👋" (28sp, SemiBold, Black)
+├─ Notification bell icon (rust circle background, 56dp)
+│
+[Search Section]
+├─ Search bar (rust accent, 48dp height, rounded 12dp)
+│
+[Collections Section]
+├─ "Your Stashes" title + count
+├─ 3-Column Grid of Stash Cards
+│  └─ Each card: 160dp height, rounded 16dp
+│     ├─ Stash color (primary background)
+│     ├─ Stash name (18sp, SemiBold, white)
+│     ├─ Item count (14sp, white, 70% opacity)
+│     └─ Delete icon (temporary, top-right)
+│
+[FAB]
+└─ Create Stash button (56dp, rust color, bottom-right, rounded)
+```
+
+**Design Notes**:
+- Background: White
+- Header spacing: 40dp top, 28dp gaps
+- Stash cards use vibrant colors from user selection (rust, terracotta, eucalyptus, gold, sage)
+- Smooth transitions between stashes
+- 3-column grid optimized for modern screens
+
+**Interactions**:
+- Tap stash → Detail screen
+- Tap search → Search screen
+- Tap FAB → Create dialog
+- (Future) Long-press stash → Drag to rearrange
+
+---
+
+### 2. Stash Detail Screen
+
+**Purpose**: View all items in a stash, add items, manage stash.
+
+**Layout**:
+```
+[Header]
+├─ Back arrow (40dp from top, rust color)
+├─ Stash name (24sp, SemiBold)
+├─ Item count badge (rust, 28dp, rounded full)
+│
+[Filter/Sort Section]
+├─ Filter chips (sort by date, name, favorite)
+│
+[Items Grid]
+├─ 2-Column grid (or 3-column for dense view)
+├─ Each item card: Variable height
+│  ├─ Preview image/icon (dominant)
+│  ├─ Title + description
+│  ├─ Source badge (instagram, link, etc.)
+│  ├─ Favorite heart (rust when favorited)
+│  └─ Share icon
+│
+[FAB]
+└─ Add item to stash (56dp, rust)
+```
+
+**Design Notes**:
+- Background: White
+- Header: Rust accents, prominent back button
+- Item cards: Clean, image-forward, with metadata
+- Favorite heart animates to rust on tap
+- Source badges use secondary colors (gold for special, sage for regular)
+
+---
+
+### 3. Create Stash Dialog
+
+**Purpose**: Collect stash name and select theme color.
+
+**Layout**:
+```
+[Dialog Box - rounded 20dp]
+├─ Title: "Create New Stash" (20sp, SemiBold, black)
+├─
+├─ Input Field
+│  └─ "Stash name" placeholder (light rust border, 48dp)
+├─
+├─ Color Picker Grid
+│  ├─ Title: "Choose Theme Color" (14sp, SemiBold)
+│  └─ 5x2 grid of color circles (56dp each, rounded full)
+│     ├─ Red Roo Rust (#C1703F)
+│     ├─ Outback Terracotta (#D85C36)
+│     ├─ Eucalyptus (#2F6B5E)
+│     ├─ Acacia Gold (#E8A33D)
+│     ├─ Sage Mist (#9BAA8C)
+│     └─ Plus custom color option
+│  └─ Selected color shows checkmark (white, 24dp)
+├─
+├─ Button Row
+│  ├─ Cancel (light gray bg, black text, 44dp, rounded 10dp)
+│  └─ Create (rust bg, white text, 44dp, rounded 10dp)
+```
+
+**Design Notes**:
+- Dialog background: White
+- Prominent color palette showcasing brand colors
+- Input field has rust accent on focus
+- Buttons are large, clear, accessible
+
+---
+
+### 4. Search Screen
+
+**Purpose**: Global search across all items and stashes.
+
+**Layout**:
+```
+[Header]
+├─ Back arrow (rust, 40dp)
+├─ Search input (rust accent, 56dp, rounded 16dp)
+│  └─ Clear button (rust X icon)
+│
+[Filter Chips]
+├─ Stash filter chips (horizontal scroll)
+├─ Date range chips
+├─ Source app chips (instagram, link, etc.)
+│
+[Results]
+├─ If no query: "Recent searches" or empty state illustration
+├─ If query entered:
+│  ├─ Stash matches (if any)
+│  │  └─ Stash cards, rounded, rust accent
+│  ├─ Item matches (if any)
+│  │  └─ Item preview cards, 2-column grid
+│
+[Empty State]
+└─ Illustration + "No results" message (friendly, warm tones)
+```
+
+**Design Notes**:
+- Background: White
+- Search input prominent, rust-accented
+- Filter chips: Light rust background, rust text
+- Results: Same visual language as elsewhere
+
+---
+
+### 5. Unstashed/Recent Items Screen
+
+**Purpose**: View items not assigned to a stash, or recent saves.
+
+**Layout**:
+```
+[Header]
+├─ Title: "Recent Items" or "Unstashed" (28sp, SemiBold)
+│
+[Quick Filter]
+├─ Chips: "All", "Today", "This Week", "This Month"
+├─ Stash chips (if filtering by stash)
+│
+[Items Grid]
+├─ 2-Column grid of item preview cards
+├─ Each card: Variable height
+│  ├─ Image/preview (dominant)
+│  ├─ Title + description
+│  ├─ Date badge (sage background, 12sp)
+│  ├─ Source badge (gold, 12sp)
+│  ├─ Favorite heart (rust when active)
+│  └─ Add to stash button (small, rust outline)
+│
+[Empty State]
+└─ Illustration + "No items" message
+```
+
+**Design Notes**:
+- Background: White
+- Date badges: Sage Mist background, dark text
+- Source badges: Acacia Gold background
+- Cards have clean, minimal design
+
+---
+
+### 6. Settings Screen
+
+**Purpose**: User preferences, theme, data management.
+
+**Layout**:
+```
+[Header]
+├─ Title: "Settings" (28sp, SemiBold)
+│
+[Preference Sections]
+├─
+├─ Section: Display
+│  ├─ Theme toggle (Light/Dark) with rust toggle
+│  ├─ Layout preference (2-column/3-column grid)
+│  ├─ Font size adjuster
+│
+├─ Section: Data
+│  ├─ Export stashes (button, rust outline)
+│  ├─ Backup to cloud (button, rust)
+│  ├─ Clear cache (button, terracotta)
+│  ├─ Delete account (button, red alert)
+│
+├─ Section: About
+│  ├─ App version
+│  ├─ Privacy policy (link, rust)
+│  ├─ Terms of service (link, rust)
+│  ├─ Contact/Feedback (link, rust)
+│
+└─ Footer: "Made with ❤️ by [Team]"
+```
+
+**Design Notes**:
+- Background: White
+- Toggle switches: Rust when active
+- Buttons use vibrant colors for hierarchy
+- Destructive actions: Red/terracotta
+
+---
+
+### 7. Bottom Navigation
+
+**Layout**:
+```
+┌─────────────────────────────────┐
+│  [Home] [Unstashed] [Search] [Settings] │
+│  ✓ (active tab)                  │
+└─────────────────────────────────┘
+```
+
+**Design**:
+- Height: 64dp
+- Background: White
+- Active tab: Light rust background (#E8D4C8), rust icon + text
+- Inactive tabs: Gray icon (#999999) + text
+- Icons: 24dp, rounded 12dp background
+- Labels: 10sp, SemiBold
+- No ripple effects—solid highlights only
 
 ---
 
 ## Data Model
 
-### Core Entities
-
-**StashEntity** (Collection/Folder)
+### StashEntity
 ```
-- id: Int (auto-increment)
-- name: String (e.g., "Design Inspiration")
+- id: Int (primary key)
+- name: String (user-defined)
+- color: String (hex, from palette or custom)
 - description: String (optional)
-- color: String (hex color for UI)
-- itemCount: Int (cache, computed from SavedItem count)
+- itemCount: Int (cached from SavedItem count)
 - createdAt: Long (timestamp)
 - updatedAt: Long (timestamp)
+- sortOrder: Int (for drag-to-rearrange)
 - isShared: Boolean (future)
-- collaborators: String (JSON array, future)
+- collaborators: String (JSON, future)
 ```
 
-**SavedItemEntity** (Individual saved content)
+### SavedItemEntity
 ```
-- id: Int (auto-increment)
+- id: Int (primary key)
 - stashId: Int (foreign key)
 - title: String
 - description: String
 - url: String (normalized)
-- imageUrl: String (cached preview)
-- tags: String (CSV for now)
-- sourceApp: String (e.g., "instagram", "twitter", "safari")
+- imageUrl: String (local cache)
+- tags: String (CSV)
+- sourceApp: String (instagram, twitter, safari, etc.)
 - savedAt: Long (timestamp)
 - isFavorite: Boolean
 - isLocalOnly: Boolean (not synced)
 - raw: String (raw metadata as JSON)
+- sortOrder: Int (for custom sorting)
 ```
 
-### Database
-- Room ORM with SQLite
-- Entities in `data/database/`
-- DAOs handle queries (StashDao, SavedItemDao)
-- Repository pattern for data access
+---
+
+## Key Interactions & Micro-interactions
+
+### Favorite Heart
+- Tap heart → Animates to rust color (0.3s spring animation)
+- Tap again → Animates back to gray
+
+### Stash Tap
+- Tap card → Smooth transition to Detail screen
+- Visual feedback: Card elevation increases, slight scale
+
+### Create Stash
+- Tap FAB → Dialog slides up with spring animation
+- Color picker: Tap color → Shows checkmark, animates selection
+- Create button: Disabled if name is empty, tap creates stash + navigates
+
+### Search
+- Type in search → Real-time results (debounced 300ms)
+- Clear button (X) appears → Clears search smoothly
+- Filter chips: Tap to toggle, highlight changes to rust
+
+### Notifications Bell
+- Bell icon has circle background (56dp)
+- Tap → Shows notification center (overlay or new screen)
+- Badge number (red dot or count) if unread
+
+### Delete (Temporary)
+- Tap trash icon on stash card → Confirmation dialog
+- Confirm → Card animates out, deleted from grid
 
 ---
 
-## Architecture
+## Animation & Motion
 
-### MVVM + Repository Pattern
+- **Transitions**: Smooth, 300-400ms
+- **Scale**: Buttons scale to 0.95 on press
+- **Opacity**: Inactive elements fade to 70%
+- **Color Transitions**: 250ms when colors change
+- **Screen Transitions**: Slide from right (new screens), slide to left (back)
+
+---
+
+## Accessibility & Responsiveness
+
+- **Min Safe Area**: 20dp sides, 40dp top
+- **Touch Targets**: Minimum 48dp x 48dp
+- **Color Contrast**: WCAG AA (all text/bg combos)
+- **Font Scaling**: Supports system font scaling (up to 200%)
+- **Dark Mode**: Future support (invert colors, maintain rust as primary)
+- **Responsiveness**: Designed for 360dp-480dp width (phones), scales for tablets
+
+---
+
+## Typography Hierarchy
 
 ```
-Presentation Layer (Compose UI)
-    ↓
-ViewModel (StateFlow, coroutines)
-    ↓
-Repository (data orchestration)
-    ↓
-Data Layer (Room Database + local storage)
+28-32sp, SemiBold    → Screen titles ("Hello, User", "Your Stashes")
+20-22sp, SemiBold    → Section titles, features
+18sp, SemiBold       → Card titles, stash names
+16sp, Regular        → Body text, descriptions
+14sp, Regular        → Secondary text, helper text
+12sp, SemiBold       → Labels, badges, tags
+11sp, Regular        → Captions, metadata
 ```
 
-### Key Layers
+---
 
-**Presentation** (`presentation/`)
-- Screens: HomePremium, UnstashedPremium, SearchPremium, SettingsPremium
-- Components: BottomNavigationBar, CreateStashDialogPremium, StashCardPremium
-- Theme: San Francisco font, black/white color scheme
+## Premium Feel Checklist
 
-**ViewModel** (`presentation/viewmodels/`)
-- StashViewModel: manages stashes and saved items
-- Uses StateFlow for reactive updates
-- Handles business logic (create, update, delete, search)
-
-**Repository** (`data/repository/`)
-- StashRepository: single source of truth
-- Coordinates StashDao and SavedItemDao
-- Handles data transformations
-
-**Database** (`data/database/`)
-- StashDatabase: Room database
-- StashDao, SavedItemDao: query interfaces
-- Entities: StashEntity, SavedItemEntity
-
-### State Management
-
-- **StateFlow** for UI state (not LiveData)
-- **Coroutines** for async operations
-- **Manual DI** (no Hilt - AGP compatibility issues)
+✅ **Vibrant, intentional color palette** (not minimalist, not default)
+✅ **Generous spacing & padding** (breathing room, premium quality)
+✅ **Rounded corners everywhere** (16-20dp, friendly, premium)
+✅ **Custom interactions** (no Material ripples, spring animations)
+✅ **Warm, inviting visual language** (rust, gold, sage, green)
+✅ **iOS-native font** (San Francisco)
+✅ **Playful but sophisticated** (not cutesy, not cold)
+✅ **Smooth, purposeful animations** (not gratuitous)
+✅ **High-quality visual hierarchy** (clear, organized, intentional)
+✅ **Custom UI components** (no default Material Design)
 
 ---
 
-## UI/UX Design System
+## Feature Roadmap
 
-### Color Palette
-- **Primary**: Black (#000000)
-- **Background**: White (#FFFFFF)
-- **Secondary**: Gray (#666666, #999999)
-- **Light Gray**: #F0F0F0, #F5F5F5 (inputs, backgrounds)
-- **Accents**: User-selected stash colors (orange, coral, etc.)
+### MVP (Phase 1 - Now)
+✅ Create stashes with color selection
+✅ View stashes in 3-column grid
+✅ Placeholder screens for tabs
+✅ Premium visual design
 
-### Typography
-- **Font**: San Francisco (Regular, Medium, Semibold, Bold)
-- All font files in `app/src/main/res/font/`
-- Type.kt defines all text styles
+### Phase 2 (Near-term)
+- [ ] Share intent (save from other apps)
+- [ ] Stash detail screen (view items in stash)
+- [ ] Full search implementation
+- [ ] Item favorites
+- [ ] Stash sorting/filtering
 
-### Component Sizing
-- Padding: 16-24dp standard
-- Border radius: 12-20dp (all rounded)
-- Icon sizes: 20-24dp standard
-- Card heights: 140dp (stash cards)
-- Bottom nav: 64dp height
+### Phase 3 (Medium-term)
+- [ ] Drag-to-rearrange stashes
+- [ ] Cloud sync/backup
+- [ ] Sharing stashes with friends
+- [ ] Advanced filtering & sorting
+- [ ] Item annotations (notes, tags)
 
-### No Ripple Effects
-- Custom solid highlights instead (light gray background)
-- Removed Material Design ripples completely
-- Clickable with `indication = null, interactionSource = remember { MutableInteractionSource() }`
-
----
-
-## Navigation
-
-**4 Main Tabs** (Bottom Navigation)
-1. **Home** - View all stashes, create new stash, quick actions
-2. **Unstashed** - Recently saved items, items without stash
-3. **Search** - Global search across all items
-4. **Settings** - App settings, user preferences
-
-**Deep Links**
-- `home` → HomePremium
-- `unstashed` → UnstashedPremium
-- `search` → SearchPremium
-- `settings` → SettingsPremium
-- `stash/{stashId}` → StashDetailScreen (shows items in stash)
-
----
-
-## Feature Set (MVP)
-
-### Implemented ✅
-- Create stashes with color selection
-- View all stashes in 2-column grid
-- Premium UI with San Francisco font
-- Edge-to-edge display
-- Custom bottom navigation (no ripples)
-- Basic theme (black/white)
-- Empty placeholder screens for other tabs
-
-### In Progress 🔄
-- (None - UI foundation complete)
-
-### To Build 📋
-- **Home Screen Details**
-  - Add stash count and last modified date
-  - Implement swipe-to-delete
-  - Implement long-press menu (duplicate, export, etc.)
-
-- **Unstashed Tab**
-  - List recently saved items
-  - Filter by date, source app
-  - Quick add to stash
-
-- **Search Tab**
-  - Full-text search across titles, descriptions, tags
-  - Filter by stash, date, source app
-  - Search suggestions based on history
-
-- **Settings Tab**
-  - User preferences (theme, sorting)
-  - Data management (export, import, backup)
-  - About, help, feedback
-
-- **Detail Screen** (Stash Contents)
-  - List all items in stash
-  - Sort options (date, title, favorite)
-  - View individual item details
-  - Quick actions (copy URL, share, delete)
-
-- **Share Intent** (Core Feature)
-  - Handle Intent.ACTION_SEND (single file/link)
-  - Handle Intent.ACTION_SEND_MULTIPLE (multiple files)
-  - Parse metadata from shared content
-  - Auto-categorize or prompt user for stash
-
-- **Item Detail** (Full View)
-  - Show full content, image preview
-  - Edit title, description, tags
-  - Move to different stash
-  - Mark as favorite
+### Phase 4 (Future)
+- [ ] Dark mode
+- [ ] Stash templates/suggestions
+- [ ] Collaborative stashes
+- [ ] AI-powered categorization
+- [ ] Export/import tools
 
 ---
 
 ## Technical Stack
 
-### Language & Framework
-- **Kotlin** (primary language)
-- **Jetpack Compose** (UI framework - no XML)
-- **Android 26+** (minSdk)
-
-### Key Libraries
-- **Jetpack**
-  - Compose UI 1.5.4
-  - Material3 1.1.2
-  - Navigation Compose 2.7.2
-  - ViewModel + LiveData 2.6.1
-  - Room 2.6.1
-  - Lifecycle 2.6.1
-
-- **Icons & Fonts**
-  - Material Icons Extended 1.5.4
-  - San Francisco font (embedded)
-
-- **Utilities**
-  - Coroutines 1.7.3
-  - Coil (image loading) 2.5.0
-
-### Build Config
-- Gradle with Kotlin DSL
-- API 34 (target & compile)
-- Min API 26 (Android 8.0)
-- No Hilt (manual DI due to AGP compatibility)
+- **Language**: Kotlin
+- **UI Framework**: Jetpack Compose
+- **Database**: Room + SQLite
+- **State Management**: StateFlow + coroutines
+- **Architecture**: MVVM + Repository pattern
+- **Min API**: 26 (Android 8.0)
+- **Target API**: 34
 
 ---
 
-## File Structure
+## Success Metrics
 
-```
-app/src/main/
-├── java/com/stashapp/
-│   ├── MainActivity.kt                    # Entry point, navigation setup
-│   ├── data/
-│   │   ├── database/
-│   │   │   ├── StashDatabase.kt          # Room database
-│   │   │   ├── StashEntity.kt            # Stash data model
-│   │   │   ├── StashDao.kt               # Stash queries
-│   │   │   └── SavedItemEntity.kt        # Item data model
-│   │   └── repository/
-│   │       └── StashRepository.kt        # Data access layer
-│   ├── presentation/
-│   │   ├── screens/
-│   │   │   ├── HomePremium.kt           # Home screen (implemented)
-│   │   │   ├── UnstashedPremium.kt      # Recent items (placeholder)
-│   │   │   ├── SearchPremium.kt         # Search (placeholder)
-│   │   │   ├── SettingsPremium.kt       # Settings (placeholder)
-│   │   │   └── StashDetailScreen.kt     # Stash contents (placeholder)
-│   │   ├── components/
-│   │   │   ├── BottomNavigationBar.kt   # Custom nav (implemented)
-│   │   │   ├── StashCardPremium.kt      # Card UI (implemented)
-│   │   │   ├── CreateStashDialogPremium.kt # Dialog (implemented)
-│   │   │   ├── CustomIcons.kt           # Icon wrappers
-│   │   │   └── SvgIcon.kt               # Icon utilities
-│   │   └── viewmodels/
-│   │       ├── StashViewModel.kt        # Main view model
-│   │       └── StashViewModelFactory.kt # DI helper
-│   └── ui/theme/
-│       ├── Theme.kt                      # Black/white color scheme
-│       ├── Type.kt                       # San Francisco font setup
-│       └── Shape.kt                      # Corner radius config
-├── res/
-│   ├── font/                             # San Francisco fonts
-│   │   ├── sf_regular.otf
-│   │   ├── sf_semibold.otf
-│   │   ├── sf_bold.otf
-│   │   └── sf_medium.otf
-│   └── values/
-│       └── strings.xml                   # App strings
-└── AndroidManifest.xml                   # Permissions, activities
-```
-
----
-
-## Design Decisions & Rationale
-
-### Why Manual DI, Not Hilt?
-Hilt had AGP (Android Gradle Plugin) compatibility issues in initial setup. Manual DI is simpler, more transparent, and sufficient for MVP.
-
-### Why San Francisco Font?
-Premium iOS apps use SF. It signals quality and consistency. Embedded locally for offline reliability.
-
-### Why Black/White Color Scheme for MVP?
-Simplicity. Reduces cognitive load during development. Users can customize stash colors. Focus on functionality first, theming later.
-
-### Why No Ripple Effects?
-Material Design ripples feel generic. Custom solid highlights (light gray background) are cleaner, more premium, less "Android-y".
-
-### Why Room, Not Firebase?
-Local-first approach. Privacy-conscious. Offline-capable. Simpler for MVP. Firebase integration can be added later for sync.
-
-### Why Compose, Not XML?
-Modern, declarative, cleaner code. Better for rapid iteration. Easier to build custom premium UI.
-
----
-
-## What's Next (Post-MVP)
-
-1. **Share Intent** - Save from other apps (critical feature)
-2. **Item Details** - Full UI for viewing/editing items
-3. **Search** - Implement full-text search
-4. **Sync** - Firebase/cloud backup
-5. **Sharing** - Collaborate on stashes (future)
-6. **Themes** - Dark mode, custom colors
-7. **Advanced Sorting** - Filter, sort by multiple fields
-
----
-
-## Success Metrics (MVP)
-
-- App launches without errors
-- Can create and view stashes
-- UI feels premium (not default Android)
-- All navigation works smoothly
-- No crashes on typical workflows
 - Build time < 60 seconds
+- App launches in < 2 seconds
+- All animations 60fps
+- Premium, vibrant, intentional feel
+- No crashes on typical workflows
+- Accessible (WCAG AA)
 
 ---
 
-## Known Issues / Tech Debt
+## Design Files & References
 
-- Placeholder screens need full implementation
-- No error handling for edge cases yet
-- Item counts are hardcoded (should query DB)
-- No input validation on stash creation
-- Share intent not yet integrated
-- Search not implemented
+- **Dribbble Inspiration**: imagreferencedribble folder
+- **Color Hex Values**: Documented above
+- **Typography**: San Francisco family, all weights available
+- **Icon Set**: Material Icons Extended (customized)
 
 ---
 
-## Running & Testing
+**Last Updated**: 2026-06-21  
+**Status**: Ready for Claude Design + Figma Make  
+**Next**: Generate high-fidelity mockups from this spec
 
-```bash
-# Build
-./gradlew clean build
-
-# Run on emulator
-./gradlew installDebug
-
-# Launch
-adb shell am start -n com.stashapp/.MainActivity
-
-# View logs
-adb logcat com.stashapp:V *:S
-```
-
----
-
-**Last Updated**: 2026-06-21
-**Status**: MVP UI Complete, Ready for Core Feature Development
