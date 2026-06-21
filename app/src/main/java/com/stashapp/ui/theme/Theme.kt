@@ -10,36 +10,36 @@ import androidx.compose.ui.text.font.Font
 import com.stashapp.R
 
 private val LightColors = lightColorScheme(
-    primary = Color(0xFFFF6B6B),           // Coral Red
+    primary = Color.Black,
     onPrimary = Color.White,
-    primaryContainer = Color(0xFFFFE5E5),
-    onPrimaryContainer = Color(0xFF8B0000),
+    primaryContainer = Color(0xFFF0F0F0),
+    onPrimaryContainer = Color.Black,
 
-    secondary = Color(0xFF00D4AA),         // Mint Green
+    secondary = Color(0xFF666666),
     onSecondary = Color.White,
-    secondaryContainer = Color(0xFFB3F5E8),
-    onSecondaryContainer = Color(0xFF00664D),
+    secondaryContainer = Color(0xFFE8E8E8),
+    onSecondaryContainer = Color(0xFF333333),
 
-    tertiary = Color(0xFF49CBEB),          // Cyan/Turquoise
+    tertiary = Color(0xFF999999),
     onTertiary = Color.White,
-    tertiaryContainer = Color(0xFFD4F8FF),
-    onTertiaryContainer = Color(0xFF005B7D),
+    tertiaryContainer = Color(0xFFF5F5F5),
+    onTertiaryContainer = Color(0xFF444444),
 
-    error = Color(0xFFBA1A1A),
+    error = Color.Black,
     onError = Color.White,
-    errorContainer = Color(0xFFFFDAD6),
-    onErrorContainer = Color(0xFF410E0B),
+    errorContainer = Color(0xFFE8E8E8),
+    onErrorContainer = Color(0xFF1A1A1A),
 
-    background = Color(0xFFFAFAFA),        // Light background
-    onBackground = Color(0xFF1C1C1C),
+    background = Color.White,
+    onBackground = Color.Black,
 
     surface = Color.White,
-    onSurface = Color(0xFF1C1C1C),
-    surfaceVariant = Color(0xFFF0F0F0),
-    onSurfaceVariant = Color(0xFF7A7A7A),
+    onSurface = Color.Black,
+    surfaceVariant = Color(0xFFF5F5F5),
+    onSurfaceVariant = Color(0xFF999999),
 
-    outline = Color(0xFFB3B3B3),
-    outlineVariant = Color(0xFFD9D9D9),
+    outline = Color(0xFFCCCCCC),
+    outlineVariant = Color(0xFFEEEEEE),
 )
 
 @Composable
