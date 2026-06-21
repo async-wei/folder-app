@@ -3,6 +3,7 @@ package com.stashapp
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,11 +23,11 @@ import androidx.navigation.compose.rememberNavController
 import com.stashapp.data.database.StashDatabase
 import com.stashapp.data.repository.StashRepository
 import com.stashapp.presentation.components.StashBottomNavigationBar
-import com.stashapp.presentation.screens.HomeScreenV2
-import com.stashapp.presentation.screens.SearchScreen
+import com.stashapp.presentation.screens.HomePremium
+import com.stashapp.presentation.screens.SearchPremium
 import com.stashapp.presentation.screens.StashDetailScreen
-import com.stashapp.presentation.screens.UnstashedScreen
-import com.stashapp.presentation.screens.SettingsScreen
+import com.stashapp.presentation.screens.UnstashedPremium
+import com.stashapp.presentation.screens.SettingsPremium
 import com.stashapp.presentation.viewmodels.StashViewModel
 import com.stashapp.presentation.viewmodels.StashViewModelFactory
 import com.stashapp.ui.theme.StashAppTheme
@@ -33,6 +35,12 @@ import com.stashapp.ui.theme.StashAppTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Enable edge-to-edge display
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.navigationBarColor = android.graphics.Color.TRANSPARENT
+        window.statusBarColor = android.graphics.Color.TRANSPARENT
+
         setContent {
             StashAppTheme {
                 Surface(
@@ -73,7 +81,7 @@ class MainActivity : ComponentActivity() {
                         ) {
                             composable("home") {
                                 currentRoute.value = "home"
-                                HomeScreenV2(
+                                HomePremium(
                                     viewModel = viewModel,
                                     onStashClick = { stashId ->
                                         navController.navigate("stash/$stashId")
@@ -86,26 +94,23 @@ class MainActivity : ComponentActivity() {
                             }
                             composable("unstashed") {
                                 currentRoute.value = "unstashed"
-                                UnstashedScreen(
+                                UnstashedPremium(
                                     viewModel = viewModel
                                 )
                             }
                             composable("search") {
                                 currentRoute.value = "search"
-                                SearchScreen(
+                                SearchPremium(
                                     viewModel = viewModel,
                                     onBackClick = {
                                         currentRoute.value = "home"
                                         navController.popBackStack()
-                                    },
-                                    onItemClick = { itemId ->
-                                        // TODO: Navigate to item detail
                                     }
                                 )
                             }
                             composable("settings") {
                                 currentRoute.value = "settings"
-                                SettingsScreen()
+                                SettingsPremium()
                             }
                             composable("stash/{stashId}") { backStackEntry ->
                                 val stashId = backStackEntry.arguments?.getString("stashId")
