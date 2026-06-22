@@ -187,7 +187,7 @@ Please generate:
 This prompt is based on the complete Stash Anything MVP specification (PROJECT_MVP.md) provided separately. The app is a content-saving platform with a vibrant, premium aesthetic. The home screen is the primary entry point showcasing user stash collections.
 
 **Inspiration**: Playful-colorful design systems like Nestie, Bezel, Alto, or premium Dribbble designs with warm color palettes and generous spacing.
-
+There are also premium IOS app mockups attached from Dribbble.
 ---
 
 ## Design System Summary (for reference)
